@@ -80,7 +80,7 @@ size_t RedirectablePrint::vprintf(const char *logLevel, const char *format, va_l
     }
     if (color && logLevel != nullptr) {
         if (strcmp(logLevel, MESHTASTIC_LOG_LEVEL_DEBUG) == 0)
-            Print::write("\u001b[34m", 5);
+            Print::write("\u001b[37m", 5);
         if (strcmp(logLevel, MESHTASTIC_LOG_LEVEL_INFO) == 0)
             Print::write("\u001b[32m", 5);
         if (strcmp(logLevel, MESHTASTIC_LOG_LEVEL_WARN) == 0)
@@ -108,7 +108,7 @@ void RedirectablePrint::log_to_serial(const char *logLevel, const char *format, 
     // include the header
     if (color) {
         if (strcmp(logLevel, MESHTASTIC_LOG_LEVEL_DEBUG) == 0)
-            Print::write("\u001b[34m", 5);
+            Print::write("\u001b[37m", 5);
         if (strcmp(logLevel, MESHTASTIC_LOG_LEVEL_INFO) == 0)
             Print::write("\u001b[32m", 5);
         if (strcmp(logLevel, MESHTASTIC_LOG_LEVEL_WARN) == 0)
