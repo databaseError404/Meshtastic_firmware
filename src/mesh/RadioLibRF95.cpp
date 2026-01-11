@@ -11,7 +11,7 @@ int16_t RadioLibRF95::begin(float freq, float bw, uint8_t sf, uint8_t cr, uint8_
                             uint8_t gain)
 {
     // execute common part
-    uint8_t rf95versions[2] = {0x12, 0x11};
+    uint8_t rf95versions[3] = {0x12, 0x11, 0x22};
     int16_t state = SX127x::begin(rf95versions, sizeof(rf95versions), syncWord, preambleLength);
     RADIOLIB_ASSERT(state);
 

@@ -22,13 +22,37 @@
 #define LED_PIN      20
 #define LED_STATE_ON 1
 
+
+// LoRa
+#define LORA_MOSI  11
+#define LORA_MISO  13
+#define LORA_SCK   12
+#define LORA_CS    10
+#define LORA_RESET  2
+#define LORA_BUSY  18
+#define LORA_IRQ   17
+
+#define USE_LR1121
+#ifdef USE_LR1121
+    #define LR1121_SPI_MOSI_PIN   LORA_MOSI
+    #define LR1121_SPI_MISO_PIN   LORA_MISO
+    #define LR1121_SPI_SCK_PIN    LORA_SCK
+    #define LR1121_SPI_NSS_PIN    LORA_CS
+    #define LR1121_NRESET_PIN     LORA_RESET
+    #define LR1121_BUSY_PIN       LORA_BUSY
+    #define LR1121_IRQ_PIN        LORA_IRQ
+    #define LR11X0_DIO3_TCXO_VOLTAGE 3.0
+    #define LR11X0_DIO_AS_RF_SWITCH
+#endif
+
+
+/*
 // LoRa
 #define USE_SX1262 // E22-900M30S, E22-900M22S, and E22-900MM22S (not E220!) use SX1262
 #define USE_SX1268 // E22-400M30S, E22-400M33S, E22-400M22S, and E22-400MM22S use SX1268
 
 #define SX126X_MAX_POWER 22          // SX126xInterface.cpp defaults to 22 if not defined, but here we define it for good practice
 #define SX126X_DIO3_TCXO_VOLTAGE 1.8 // E22 series TCXO reference voltage is 1.8V
-#define TCXO_OPTIONAL                // make it so that the firmware can try both TCXO and XTAL
 
 #define SX126X_CS    10 // EBYTE module's NSS pin // FIXME: rename to SX126X_SS
 #define SX126X_SCK   12 // EBYTE module's SCK pin
@@ -47,3 +71,4 @@
 #define LORA_MOSI SX126X_MOSI // Compatibility with variant file configuration structure
 #define LORA_MISO SX126X_MISO // Compatibility with variant file configuration structure
 #define LORA_DIO1 SX126X_DIO1 // Compatibility with variant file configuration structure
+*/
