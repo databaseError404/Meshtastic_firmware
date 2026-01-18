@@ -2,12 +2,10 @@
 #define LED_PIN      20
 #define LED_STATE_ON 1
 
-/*
 #define HAS_NEOPIXEL                         // Enable the use of neopixels
 #define NEOPIXEL_COUNT 1                     // How many neopixels are connected
 #define NEOPIXEL_DATA 48                     // gpio pin used to send data to the neopixels
 #define NEOPIXEL_TYPE (NEO_GRB + NEO_KHZ800) // type of neopixels in use
-*/
 
 // Screen (disabled)
 #define HAS_SCREEN 0 // Assume no screen present by default to prevent crash...

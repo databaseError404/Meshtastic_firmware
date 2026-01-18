@@ -4,9 +4,6 @@
 #define ADC_MULTIPLIER 2.0
 #define ADC_CHANNEL ADC1_GPIO3_CHANNEL
 
-// Button on NanoVHF PCB
-#define BUTTON_PIN 39
-
 // I2C via connectors on NanoVHF PCB
 #define I2C_SCL 2
 #define I2C_SDA 42
@@ -22,6 +19,15 @@
 #define LED_PIN      20
 #define LED_STATE_ON 1
 
+#define HAS_NEOPIXEL                         // Enable the use of neopixels
+#define NEOPIXEL_COUNT 1                     // How many neopixels are connected
+#define NEOPIXEL_DATA 48                     // gpio pin used to send data to the neopixels
+#define NEOPIXEL_TYPE (NEO_GRB + NEO_KHZ800) // type of neopixels in use
+
+#define BUTTON_PIN 0 // This is the BOOT button
+#define BUTTON_NEED_PULLUP
+
+#define PIN_BUZZER 46
 
 // LoRa
 #define LORA_MOSI  11

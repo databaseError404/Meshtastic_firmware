@@ -4,9 +4,6 @@
 #define ADC_MULTIPLIER 2.0
 #define ADC_CHANNEL ADC1_GPIO3_CHANNEL
 
-// Button on NanoVHF PCB
-#define BUTTON_PIN 39
-
 // I2C via connectors on NanoVHF PCB
 #define I2C_SCL 2
 #define I2C_SDA 42
@@ -21,6 +18,11 @@
 
 #define LED_PIN      20
 #define LED_STATE_ON 1
+
+#define BUTTON_PIN 0 // This is the BOOT button
+#define BUTTON_NEED_PULLUP
+
+#define PIN_BUZZER 46
 
 // LoRa
 #define USE_SX1262 // E22-900M30S, E22-900M22S, and E22-900MM22S (not E220!) use SX1262
