@@ -107,14 +107,14 @@ NRF52 PRO MICRO PIN ASSIGNMENT
 // Serial interfaces
 #define SPI_INTERFACES_COUNT 1
 
-#define PIN_SPI_MISO (0 + 2)   // P0.02
-#define PIN_SPI_MOSI (32 + 15) // P1.15
-#define PIN_SPI_SCK (32 + 11)  // P1.11
+#define PIN_SPI_MISO (32 + 13) // P1.13   //#define PIN_SPI_MISO (0 + 2)   // P0.02
+#define PIN_SPI_MOSI (32 + 11) // P1.11   //#define PIN_SPI_MOSI (32 + 15) // P1.15
+#define PIN_SPI_SCK  ( 0 + 10) // P0.10   //#define PIN_SPI_SCK (32 + 11)  // P1.11
 
 #define LORA_MISO PIN_SPI_MISO
 #define LORA_MOSI PIN_SPI_MOSI
 #define LORA_SCK PIN_SPI_SCK
-#define LORA_CS (32 + 13) // P1.13
+#define LORA_CS (0 + 9) // P0.09    //#define LORA_CS (32 + 13) // P1.13
 
 // LORA MODULES
 #define USE_LLCC68
@@ -125,29 +125,29 @@ NRF52 PRO MICRO PIN ASSIGNMENT
 
 // RF95 CONFIG
 
-#define LORA_DIO0 (0 + 29) // P0.29 BUSY
-#define LORA_DIO1 (0 + 10) // P0.10 IRQ
-#define LORA_RESET (0 + 9) // P0.09 NRST
+#define LORA_DIO0  ( 0 +  2) // P0.02 BUSY   //#define LORA_DIO0 (0 + 29) // P0.29 BUSY
+#define LORA_DIO1  (32 +  6) // P1.06 IRQ    //#define LORA_DIO1 (0 + 10) // P0.10 IRQ
+#define LORA_RESET (32 + 15) // P1.15 NRST   //#define LORA_RESET (0 + 9) // P0.09 NRST
 
 // RX/TX for RFM95/SX127x
 #define RF95_RXEN (0 + 17)    // P0.17
 #define RF95_TXEN RADIOLIB_NC // Assuming that DIO2 is connected to TXEN pin. If not, TXEN must be connected.
 
 // SX126X CONFIG
-#define SX126X_CS (32 + 13)      // P1.13 FIXME - we really should define LORA_CS instead
-#define SX126X_DIO1 (0 + 10)     // P0.10 IRQ
+#define SX126X_CS   (0 +  9)     // #define SX126X_CS (32 + 13)      // P1.13 FIXME - we really should define LORA_CS instead
+#define SX126X_DIO1 (32 + 6)     //#define SX126X_DIO1 (0 + 10)     // P0.10 IRQ
 #define SX126X_DIO2_AS_RF_SWITCH // Note for E22 modules: DIO2 is not attached internally to TXEN for automatic TX/RX switching,
                                  // so it needs connecting externally if it is used in this way
-#define SX126X_BUSY (0 + 29)     // P0.29
-#define SX126X_RESET (0 + 9)     // P0.09
+#define SX126X_BUSY (0 +  2)     //#define SX126X_BUSY (0 + 29)     // P0.29 
+#define SX126X_RESET (32 + 15)   //#define SX126X_RESET (0 + 9)     // P0.09
 #define SX126X_RXEN (0 + 17)     // P0.17
 #define SX126X_TXEN RADIOLIB_NC  // Assuming that DIO2 is connected to TXEN pin. If not, TXEN must be connected.
 
 // LR1121
 #ifdef USE_LR1121
-#define LR1121_IRQ_PIN (0 + 10)      // P0.10 IRQ
+#define LR1121_IRQ_PIN (32 + 6)      //#define LR1121_IRQ_PIN (0 + 10)      // P0.10 IRQ
 #define LR1121_NRESET_PIN LORA_RESET // P0.09 NRST
-#define LR1121_BUSY_PIN (0 + 29)     // P0.29 BUSY
+#define LR1121_BUSY_PIN (0 + 2)     //#define LR1121_BUSY_PIN (0 + 29)     // P0.29 BUSY
 #define LR1121_SPI_NSS_PIN LORA_CS   // P1.13
 #define LR1121_SPI_SCK_PIN LORA_SCK
 #define LR1121_SPI_MOSI_PIN LORA_MOSI
