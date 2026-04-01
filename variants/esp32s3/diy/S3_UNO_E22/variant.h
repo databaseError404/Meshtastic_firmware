@@ -37,8 +37,8 @@
 #define SX126X_MOSI  11 // EBYTE module's MOSI pin
 #define SX126X_MISO  13 // EBYTE module's MISO pin
 #define SX126X_RESET  2 // EBYTE module's NRST pin
-#define SX126X_BUSY  18 // EBYTE module's BUSY pin
-#define SX126X_DIO1  17 // EBYTE module's DIO1 pin
+#define SX126X_BUSY  17 // EBYTE module's BUSY pin
+#define SX126X_DIO1  18 // EBYTE module's DIO1 pin
 #define SX126X_DIO2  19 // EBYTE module's DIO2 pin
 
 #define SX126X_TXEN  3 // Schematic connects EBYTE module's TXEN pin to MCU

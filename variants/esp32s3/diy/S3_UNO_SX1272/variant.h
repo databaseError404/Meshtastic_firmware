@@ -24,10 +24,12 @@
 //#define LORA_BUSY  18
 //#define LORA_IRQ   17
 
-#define LORA_DIO0 18
-#define LORA_DIO1 17
-#define LORA_DIO2 19
-#define LORA_DIO3 20
+#define LORA_DIO0 18 // RxDone / TxDone interrupt
+#define LORA_DIO1 17 // RxTimeout / FifoLevel 
+#define LORA_DIO2 19 // FHSS change / other IRQ
+#define LORA_DIO3 20 // CAD / channel activity
+
+// RF_SWITCH подключен к 23 ноге SX1272 = RXTX
 
 //#define RF95_CS     LORA_CS
 //#define RF95_DIO1   LORA_DIO1
