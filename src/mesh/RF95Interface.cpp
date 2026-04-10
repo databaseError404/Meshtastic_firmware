@@ -82,30 +82,78 @@ DACDB getDACandDB(uint8_t dbm)
 #endif
 
 RF95Interface::RF95Interface(LockingArduinoHal *hal, RADIOLIB_PIN_TYPE cs, RADIOLIB_PIN_TYPE irq, RADIOLIB_PIN_TYPE rst,
-                             RADIOLIB_PIN_TYPE busy)
-    : RadioLibInterface(hal, cs, irq, rst, busy)
+                             RADIOLIB_PIN_TYPE busy, RadioLibRF95::ChipProfile chipProfile, SwitchProfile switchProfile)
+    : RadioLibInterface(hal, cs, irq, rst, busy), resetPin(rst), chipProfile(chipProfile), switchProfile(switchProfile)
 {
     LOG_DEBUG("RF95Interface(cs=%d, irq=%d, rst=%d, busy=%d)", cs, irq, rst, busy);
+}
+
+RADIOLIB_PIN_TYPE RF95Interface::getTxEnablePin() const
+{
+#if ARCH_PORTDUINO
+    return portduino_config.lora_txen_pin.pin;
+#else
+    switch (switchProfile) {
+    case SwitchProfile::SX1272:
+#ifdef SX1272_TXEN
+        return SX1272_TXEN;
+#endif
+        break;
+    case SwitchProfile::SX1276:
+#ifdef SX1276_TXEN
+        return SX1276_TXEN;
+#endif
+        break;
+    default:
+        break;
+    }
+
+#ifdef RF95_TXEN
+    return RF95_TXEN;
+#endif
+    return RADIOLIB_NC;
+#endif
+}
+
+RADIOLIB_PIN_TYPE RF95Interface::getRxEnablePin() const
+{
+#if ARCH_PORTDUINO
+    return portduino_config.lora_rxen_pin.pin;
+#else
+    switch (switchProfile) {
+    case SwitchProfile::SX1272:
+#ifdef SX1272_RXEN
+        return SX1272_RXEN;
+#endif
+        break;
+    case SwitchProfile::SX1276:
+#ifdef SX1276_RXEN
+        return SX1276_RXEN;
+#endif
+        break;
+    default:
+        break;
+    }
+
+#ifdef RF95_RXEN
+    return RF95_RXEN;
+#endif
+    return RADIOLIB_NC;
+#endif
 }
 
 /** Some boards require GPIO control of tx vs rx paths */
 void RF95Interface::setTransmitEnable(bool txon)
 {
-#ifdef RF95_TXEN
-    digitalWrite(RF95_TXEN, txon ? 1 : 0);
-#elif ARCH_PORTDUINO
-    if (portduino_config.lora_txen_pin.pin != RADIOLIB_NC) {
-        digitalWrite(portduino_config.lora_txen_pin.pin, txon ? 1 : 0);
+    RADIOLIB_PIN_TYPE txPin = getTxEnablePin();
+    if (txPin != RADIOLIB_NC) {
+        digitalWrite(txPin, txon ? 1 : 0);
     }
-#endif
 
-#ifdef RF95_RXEN
-    digitalWrite(RF95_RXEN, txon ? 0 : 1);
-#elif ARCH_PORTDUINO
-    if (portduino_config.lora_rxen_pin.pin != RADIOLIB_NC) {
-        digitalWrite(portduino_config.lora_rxen_pin.pin, txon ? 0 : 1);
+    RADIOLIB_PIN_TYPE rxPin = getRxEnablePin();
+    if (rxPin != RADIOLIB_NC) {
+        digitalWrite(rxPin, txon ? 0 : 1);
     }
-#endif
 }
 
 /// Initialise the Driver transport hardware and software.
@@ -124,7 +172,7 @@ bool RF95Interface::init()
 
     limitPower(RF95_MAX_POWER);
 
-    iface = lora = new RadioLibRF95(&module);
+    iface = lora = new RadioLibRF95(&module, resetPin, chipProfile);
 
 #ifdef RF95_TCXO
     pinMode(RF95_TCXO, OUTPUT);
@@ -149,28 +197,32 @@ bool RF95Interface::init()
     #define RF95_RXEN (23) // If defined, this pin should be set high prior to receive (controls an external analog switch)
     */
 
-#ifdef RF95_TXEN
-    pinMode(RF95_TXEN, OUTPUT);
-    digitalWrite(RF95_TXEN, 0);
-#endif
+    RADIOLIB_PIN_TYPE txPin = getTxEnablePin();
+    if (txPin != RADIOLIB_NC) {
+        pinMode(txPin, OUTPUT);
+        digitalWrite(txPin, 0);
+    }
 
 #ifdef RF95_FAN_EN
     pinMode(RF95_FAN_EN, OUTPUT);
     digitalWrite(RF95_FAN_EN, 1);
 #endif
 
-#ifdef RF95_RXEN
-    pinMode(RF95_RXEN, OUTPUT);
-    digitalWrite(RF95_RXEN, 1);
-#endif
-#if ARCH_PORTDUINO
-    if (portduino_config.lora_txen_pin.pin != RADIOLIB_NC) {
-        pinMode(portduino_config.lora_txen_pin.pin, OUTPUT);
-        digitalWrite(portduino_config.lora_txen_pin.pin, 0);
+    RADIOLIB_PIN_TYPE rxPin = getRxEnablePin();
+    if (rxPin != RADIOLIB_NC) {
+        pinMode(rxPin, OUTPUT);
+        digitalWrite(rxPin, 1);
     }
-    if (portduino_config.lora_rxen_pin.pin != RADIOLIB_NC) {
-        pinMode(portduino_config.lora_rxen_pin.pin, OUTPUT);
-        digitalWrite(portduino_config.lora_rxen_pin.pin, 0);
+
+#if ARCH_PORTDUINO
+    // Keep existing behavior for Linux simulation boards
+    if (txPin != RADIOLIB_NC) {
+        pinMode(txPin, OUTPUT);
+        digitalWrite(txPin, 0);
+    }
+    if (rxPin != RADIOLIB_NC) {
+        pinMode(rxPin, OUTPUT);
+        digitalWrite(rxPin, 0);
     }
 #endif
     setTransmitEnable(false);

@@ -10,10 +10,19 @@
 class RF95Interface : public RadioLibInterface
 {
     RadioLibRF95 *lora = NULL; // Either a RFM95 or RFM96 depending on what was stuffed on this board
+    RADIOLIB_PIN_TYPE resetPin = RADIOLIB_NC;
 
   public:
+    enum class SwitchProfile {
+        RF95_COMPAT,
+        SX1272,
+        SX1276,
+    };
+
     RF95Interface(LockingArduinoHal *hal, RADIOLIB_PIN_TYPE cs, RADIOLIB_PIN_TYPE irq, RADIOLIB_PIN_TYPE rst,
-                  RADIOLIB_PIN_TYPE busy);
+                  RADIOLIB_PIN_TYPE busy,
+                  RadioLibRF95::ChipProfile chipProfile = RadioLibRF95::ChipProfile::RF95_COMPAT,
+                  SwitchProfile switchProfile = SwitchProfile::RF95_COMPAT);
 
     // TODO: Verify that this irq flag works with RFM95 / SX1276 radios the way it used to
     bool isIRQPending() override { return lora->getIRQFlags() & RADIOLIB_SX127X_MASK_IRQ_FLAG_VALID_HEADER; }
@@ -68,6 +77,12 @@ class RF95Interface : public RadioLibInterface
     uint32_t getPacketTime(uint32_t pl, bool received) override { return computePacketTime(*lora, pl, received); }
 
   private:
+    RadioLibRF95::ChipProfile chipProfile = RadioLibRF95::ChipProfile::RF95_COMPAT;
+    SwitchProfile switchProfile = SwitchProfile::RF95_COMPAT;
+
+    RADIOLIB_PIN_TYPE getTxEnablePin() const;
+    RADIOLIB_PIN_TYPE getRxEnablePin() const;
+
     /** Some boards require GPIO control of tx vs rx paths */
     void setTransmitEnable(bool txon);
 };

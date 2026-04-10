@@ -5,11 +5,39 @@
 // From datasheet but radiolib doesn't know anything about this
 #define SX127X_REG_TCXO 0x4B
 
-RadioLibRF95::RadioLibRF95(Module *mod) : SX1272(mod) {}
+RadioLibRF95::RadioLibRF95(Module *mod, uint32_t resetPin, ChipProfile chipProfile)
+    : SX1272(mod), resetPin(resetPin), chipProfile(chipProfile)
+{}
+
+void RadioLibRF95::pulseReset()
+{
+    if (resetPin == RADIOLIB_NC) {
+        return;
+    }
+
+    pinMode(resetPin, OUTPUT);
+
+    // SX1272 reset is active-low, SX1276 reset is active-high.
+    if (chipProfile == ChipProfile::SX1276) {
+        digitalWrite(resetPin, HIGH);
+        delay(2);
+        digitalWrite(resetPin, LOW);
+    } else {
+        digitalWrite(resetPin, LOW);
+        delay(2);
+        digitalWrite(resetPin, HIGH);
+    }
+
+    delay(6);
+}
 
 int16_t RadioLibRF95::begin(float freq, float bw, uint8_t sf, uint8_t cr, uint8_t syncWord, int8_t power, uint16_t preambleLength,
                             uint8_t gain)
 {
+    if (chipProfile == ChipProfile::SX1272 || chipProfile == ChipProfile::SX1276) {
+        pulseReset();
+    }
+
     // execute common part
     uint8_t rf95versions[3] = {0x12, 0x11, 0x22};
     int16_t state = SX127x::begin(rf95versions, sizeof(rf95versions), syncWord, preambleLength);

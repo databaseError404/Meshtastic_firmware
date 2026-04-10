@@ -1254,6 +1254,36 @@ void setup()
             radioType = RF95_RADIO;
         }
     }
+
+#if defined(USE_SX1272)
+    if ((!rIf) && (config.lora.region != meshtastic_Config_LoRaConfig_RegionCode_LORA_24)) {
+        rIf = new RF95Interface(RadioLibHAL, LORA_CS, RF95_IRQ, RF95_RESET, RF95_DIO1,
+                                RadioLibRF95::ChipProfile::SX1272, RF95Interface::SwitchProfile::SX1272);
+        if (!rIf->init()) {
+            LOG_WARN("No SX1272 radio");
+            delete rIf;
+            rIf = NULL;
+        } else {
+            LOG_INFO("SX1272 init success");
+            radioType = RF95_RADIO;
+        }
+    }
+#endif
+
+#if defined(USE_SX1276)
+    if ((!rIf) && (config.lora.region != meshtastic_Config_LoRaConfig_RegionCode_LORA_24)) {
+        rIf = new RF95Interface(RadioLibHAL, LORA_CS, RF95_IRQ, RF95_RESET, RF95_DIO1,
+                                RadioLibRF95::ChipProfile::SX1276, RF95Interface::SwitchProfile::SX1276);
+        if (!rIf->init()) {
+            LOG_WARN("No SX1276 radio");
+            delete rIf;
+            rIf = NULL;
+        } else {
+            LOG_INFO("SX1276 init success");
+            radioType = RF95_RADIO;
+        }
+    }
+#endif
 #endif
 
 #if defined(USE_SX1262) && !defined(ARCH_PORTDUINO) && !defined(TCXO_OPTIONAL) && RADIOLIB_EXCLUDE_SX126X != 1

@@ -1,6 +1,7 @@
 #pragma once
 #if RADIOLIB_EXCLUDE_SX127X != 1
 #include <RadioLib.h>
+#include <stdint.h>
 
 /*!
   \class RFM95
@@ -10,6 +11,12 @@
 class RadioLibRF95 : public SX1272
 {
   public:
+    enum class ChipProfile {
+        RF95_COMPAT,
+        SX1272,
+        SX1276,
+    };
+
     // constructor
 
     /*!
@@ -17,7 +24,8 @@ class RadioLibRF95 : public SX1272
 
       \param mod Instance of Module that will be used to communicate with the %LoRa chip.
     */
-    explicit RadioLibRF95(Module *mod);
+    explicit RadioLibRF95(Module *mod, uint32_t resetPin = RADIOLIB_NC,
+                          ChipProfile chipProfile = ChipProfile::RF95_COMPAT);
 
     // basic methods
 
@@ -69,5 +77,10 @@ class RadioLibRF95 : public SX1272
     // since default current limit for SX126x/127x in updated RadioLib is 60mA
     // use the previous value
     float currentLimit = 100;
+
+  private:
+    uint32_t resetPin;
+    ChipProfile chipProfile;
+    void pulseReset();
 };
 #endif
